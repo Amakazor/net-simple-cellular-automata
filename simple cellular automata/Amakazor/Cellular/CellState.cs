@@ -40,7 +40,8 @@ namespace Amakazor.Cellular
 
         internal Rule Test(IEnumerable<CellState> neigbors)
         {
-            return Rules.FirstOrDefault(rule => rule.Test(neigbors));
+            foreach (Rule rule in Rules) if (rule.Test(neigbors)) return rule;
+            return null;
         }
 
         public override int GetHashCode()

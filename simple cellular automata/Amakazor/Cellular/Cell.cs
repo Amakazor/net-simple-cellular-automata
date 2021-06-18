@@ -6,11 +6,13 @@ namespace Amakazor.Cellular
     {
         internal CellState CurrentState { get; private set; }
         internal CellState NextState { private get; set; }
+        internal bool IsActive { get; set; }
 
         internal Cell(CellState currentState)
         {
             CurrentState = currentState;
             NextState = null;
+            IsActive = true;
         }
 
         internal void Tick(IEnumerable< CellState> neigbors)
@@ -26,6 +28,11 @@ namespace Amakazor.Cellular
             {
                 CurrentState = NextState;
                 NextState = null;
+                IsActive = true;
+            } 
+            else
+            {
+                IsActive = false;
             }
         }
 

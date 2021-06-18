@@ -11,11 +11,13 @@ namespace Amakazor.Cellular
         private Point BottomRight { get; set; }
         private CellState DefaultState { get; }
         public long IterationCount { get; private set; }
+        private HashSet<Cell> InactiveCells { get; set; }
 
         public CellularAutomata(IDictionary<Point, CellState> initialStates, CellState defaultState)
         {
             DefaultState = defaultState;
             IterationCount = 0;
+            InactiveCells = new HashSet<Cell>();
 
             Cells = new Dictionary<Point, Cell>();
             foreach (KeyValuePair<Point, CellState> keyValuePair in initialStates)
@@ -61,8 +63,22 @@ namespace Amakazor.Cellular
                 for (long y = TopLeft.Y; y <= BottomRight.Y; y++)
                 {
                     Point coordinates = new Point(x, y);
+
                     if (!Cells.ContainsKey(coordinates)) Cells.Add(coordinates, new Cell(DefaultState));
-                    Cells[coordinates].Tick(GetNeigbors(coordinates));
+
+                    if (!InactiveCells.Contains(Cells[coordinates]))
+                    {
+                        IEnumerable<Cell> neighbors = GetNeigbors(coordinates);
+                        if (IsAnyNeighborActive(neighbors) || Cells[coordinates].IsActive)
+                        {
+                            Cells[coordinates].Tick(neighbors.Select(neighbor => neighbor != null ? neighbor.CurrentState : DefaultState));
+                            if (IsAnyNeighborInactive(neighbors)) ActivateNeighbors(neighbors);
+                        }
+                        else
+                        {
+                            InactiveCells.Add(Cells[coordinates]);
+                        }
+                    }
                 }
             }
 
@@ -75,6 +91,17 @@ namespace Amakazor.Cellular
             }
 
             IterationCount++;
+        }
+
+        private void ActivateNeighbors(IEnumerable<Cell> neighbors)
+        {
+            foreach (var neighbor in neighbors)
+            {
+                if (neighbor != null)
+                {
+                    InactiveCells.Remove(neighbor);
+                }
+            }
         }
 
         private Sides GetSidesToExpand()
@@ -100,14 +127,36 @@ namespace Amakazor.Cellular
             return sides;
         }
 
-        private IEnumerable<CellState> GetNeigbors(Point coordinates)
+        private bool IsAnyNeighborActive(IEnumerable<Cell> neighbors)
         {
-            return (new HashSet<Point>
+            foreach (Cell neigbor in neighbors)
+            {
+                if (neigbor is null) continue;
+                if (neigbor.IsActive) return true;
+            }
+
+            return false;
+        }
+
+        private bool IsAnyNeighborInactive(IEnumerable<Cell> neighbors)
+        {
+            foreach (Cell neigbor in neighbors)
+            {
+                if (neigbor is null) continue;
+                if (!neigbor.IsActive) return true;
+            }
+
+            return false;
+        }
+
+        private IEnumerable<Cell> GetNeigbors(Point coordinates)
+        {
+            return new HashSet<Point>
                 {
                     new Point(-1, -1), new Point(0, -1), new Point(1, -1),
                     new Point(-1, 0), new Point(1, 0),
                     new Point(-1, 1), new Point(0, 1), new Point(1, 1)
-                }.Select(point => Cells.ContainsKey(coordinates + point) ? Cells[coordinates + point].CurrentState : DefaultState));
+                }.Select(point => Cells.ContainsKey(coordinates + point) ? Cells[coordinates + point] : null);
         }
 
         private void ExpandSides(Sides sides)
