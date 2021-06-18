@@ -17,13 +17,13 @@ namespace Amakazor.Cellular
             MaximalValue = maximalValue;
         }
 
-        internal bool Test(ISet<CellState> neigbors)
+        internal bool Test(IEnumerable<CellState> neigbors)
         {
             int value = 0;
 
             foreach (CellState cellState in neigbors)
             {
-                if (CellStatesToCount.Contains(cellState)) value++;
+                if (CellStatesToCount.Contains(cellState)) value += cellState.Value;
             }
 
             return value >= MinimalValue && value <= MaximalValue;

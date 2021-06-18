@@ -13,7 +13,7 @@ namespace Amakazor.Cellular
             NextState = null;
         }
 
-        internal void Tick(ISet< CellState> neigbors)
+        internal void Tick(IEnumerable< CellState> neigbors)
         {
             Rule testResult = CurrentState.Test(neigbors);
 
@@ -27,6 +27,11 @@ namespace Amakazor.Cellular
                 CurrentState = NextState;
                 NextState = null;
             }
+        }
+
+        public override string ToString()
+        {
+            return CurrentState.ToString();
         }
     }
 }

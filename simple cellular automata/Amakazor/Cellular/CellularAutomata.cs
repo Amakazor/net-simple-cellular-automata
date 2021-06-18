@@ -10,10 +10,12 @@ namespace Amakazor.Cellular
         private Point TopLeft { get; set; }
         private Point BottomRight { get; set; }
         private CellState DefaultState { get; }
+        public long IterationCount { get; private set; }
 
         public CellularAutomata(IDictionary<Point, CellState> initialStates, CellState defaultState)
         {
             DefaultState = defaultState;
+            IterationCount = 0;
 
             Cells = new Dictionary<Point, Cell>();
             foreach (KeyValuePair<Point, CellState> keyValuePair in initialStates)
@@ -36,14 +38,15 @@ namespace Amakazor.Cellular
         {
             string returnString = "";
 
-            for (long x = TopLeft.X; x <= BottomRight.X; x++)
+            for (long y = TopLeft.Y; y <= BottomRight.Y; y++)
             {
-                for (long y = TopLeft.Y; y <= BottomRight.Y; y++)
+                for (long x = TopLeft.X; x <= BottomRight.X; x++)
                 {
                     Point coordinates = new Point(x, y);
                     returnString += Cells.ContainsKey(coordinates) ? Cells[coordinates].CurrentState.Symbol : DefaultState.Symbol;
                 }
-                returnString += '\n';
+
+                if (y != BottomRight.Y) returnString += '\n';
             }
 
             return returnString;
@@ -70,6 +73,8 @@ namespace Amakazor.Cellular
                     Cells[new Point(x, y)].Apply();
                 }
             }
+
+            IterationCount++;
         }
 
         private Sides GetSidesToExpand()
@@ -80,24 +85,24 @@ namespace Amakazor.Cellular
             {
                 if (sides.Top && sides.Bottom) break;
 
-                if (!sides.Top && !Cells[new Point(i, TopLeft.Y)].CurrentState.Equals(DefaultState)) sides.Top = true;
-                if (!sides.Bottom && !Cells[new Point(i, BottomRight.Y)].CurrentState.Equals(DefaultState)) sides.Bottom = true;
+                if (!sides.Top && Cells.ContainsKey(new Point(i, TopLeft.Y)) && !Cells[new Point(i, TopLeft.Y)].CurrentState.Equals(DefaultState)) sides.Top = true;
+                if (!sides.Bottom && Cells.ContainsKey(new Point(i, BottomRight.Y)) && !Cells[new Point(i, BottomRight.Y)].CurrentState.Equals(DefaultState)) sides.Bottom = true;
             }
 
             for (long i = TopLeft.Y; i <= BottomRight.Y; i++)
             {
                 if (sides.Left && sides.Right) break;
 
-                if (!sides.Left && !Cells[new Point(i, TopLeft.X)].CurrentState.Equals(DefaultState)) sides.Left = true;
-                if (!sides.Right && !Cells[new Point(i, BottomRight.X)].CurrentState.Equals(DefaultState)) sides.Right = true;
+                if (!sides.Left && Cells.ContainsKey(new Point(TopLeft.X, i)) && !Cells[new Point(TopLeft.X, i)].CurrentState.Equals(DefaultState)) sides.Left = true;
+                if (!sides.Right && Cells.ContainsKey(new Point(BottomRight.X, i)) && !Cells[new Point(BottomRight.X, i)].CurrentState.Equals(DefaultState)) sides.Right = true;
             }
 
             return sides;
         }
 
-        private ISet<CellState> GetNeigbors(Point coordinates)
+        private IEnumerable<CellState> GetNeigbors(Point coordinates)
         {
-            return new HashSet<CellState> (new HashSet<Point>
+            return (new HashSet<Point>
                 {
                     new Point(-1, -1), new Point(0, -1), new Point(1, -1),
                     new Point(-1, 0), new Point(1, 0),
@@ -113,8 +118,8 @@ namespace Amakazor.Cellular
 
         private void SetStartingCoordinates()
         {
-            TopLeft = new Point(Cells.Keys.Select(key => key.X).Min(), Cells.Keys.Select(key => key.Y).Min());
-            BottomRight = new Point(Cells.Keys.Select(key => key.X).Max(), Cells.Keys.Select(key => key.Y).Max());
+            TopLeft = new Point(Cells.Keys.Select(key => key.X).Min() - 1, Cells.Keys.Select(key => key.Y).Min() - 1);
+            BottomRight = new Point(Cells.Keys.Select(key => key.X).Max() + 1, Cells.Keys.Select(key => key.Y).Max() + 1);
         }
     }
 }

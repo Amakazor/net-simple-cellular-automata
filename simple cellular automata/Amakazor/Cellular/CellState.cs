@@ -35,10 +35,10 @@ namespace Amakazor.Cellular
 
         public void AddRules(IEnumerable<Rule> rules)
         {
-            Rules.IntersectWith(rules);
+            Rules.UnionWith(rules);
         }
 
-        internal Rule Test(ISet<CellState> neigbors)
+        internal Rule Test(IEnumerable<CellState> neigbors)
         {
             return Rules.FirstOrDefault(rule => rule.Test(neigbors));
         }
@@ -61,6 +61,11 @@ namespace Amakazor.Cellular
             return other != null &&
                    Name == other.Name &&
                    EqualityComparer<HashSet<Rule>>.Default.Equals(Rules, other.Rules);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }
