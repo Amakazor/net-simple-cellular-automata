@@ -3,6 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>simple_cellular_automata</RootNamespace>
+    <PackageId>SimpleCellularAutomata_arkadiusz_wrzawinski</PackageId>
+    <Authors>arkadiusz_wrzawinski</Authors>
+    <Company />
+    <Product>SimpleCellularAutomata</Product>
+    <Description />
+    <PackageTags>generation procedural cellular automata gameOfLife conway</PackageTags>
+    <RepositoryUrl>https://github.com/Amakazor/net-simple-cellular-automata</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
