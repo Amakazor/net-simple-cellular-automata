@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "simple cellular automata", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GOLBlinker", "game of life\GOLBlinker.csproj", "{CEBBA79D-1538-43A4-93EF-DB5501EEA72C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GOLGlider", "GOIGlider\GOLGlider.csproj", "{AF15D8CA-4DD0-4015-8C0C-5927B64C822D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CEBBA79D-1538-43A4-93EF-DB5501EEA72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEBBA79D-1538-43A4-93EF-DB5501EEA72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEBBA79D-1538-43A4-93EF-DB5501EEA72C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF15D8CA-4DD0-4015-8C0C-5927B64C822D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF15D8CA-4DD0-4015-8C0C-5927B64C822D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF15D8CA-4DD0-4015-8C0C-5927B64C822D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF15D8CA-4DD0-4015-8C0C-5927B64C822D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
