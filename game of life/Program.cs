@@ -9,7 +9,7 @@ namespace GOLBlinker
         static void Main(string[] args)
         {
             CellState alive = new CellState("Alive", 1, '#');
-            CellState dead = new CellState("Dead", 0, ' ');
+            CellState dead = new CellState("Dead", 0, '.');
 
             Rule underpopulation = new Rule(dead, new List<CellState> { alive }, 0, 1);
             Rule overpopulation = new Rule(dead, new List<CellState> { alive }, 4, 8);
